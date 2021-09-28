@@ -13,10 +13,10 @@ module driver
   integer :: is_setup=0
 
   !f2py intent(hide) has_ssp
-  integer, dimension(nz) :: has_ssp=0
+  integer, dimension(nz,nafe) :: has_ssp=0
 
   !f2py intent(hide) has_ssp_age
-  integer, dimension(nz,nt) :: has_ssp_age=0
+  integer, dimension(nz,nafe,nt) :: has_ssp_age=0
 
 
 contains
@@ -85,8 +85,8 @@ contains
     pset%fcstar=fcstar
     pset%evtype=evtype
 
-    has_ssp(:) = 0
-    has_ssp_age(:,:) = 0
+    has_ssp(:,:) = 0
+    has_ssp_age(:,:,:) = 0
 
   end subroutine
 
@@ -182,24 +182,27 @@ contains
     implicit none
     integer :: zi
     do zi=1,nz
-      call ssp(zi)
+      do ai=1,nafe
+        call ssp(zi, ai)
+      enddo
     enddo
 
   end subroutine
 
-  subroutine ssp(zi)
+  subroutine ssp(zi,ai)
 
     ! Compute a SSP at a single metallicity.
 
     implicit none
-    integer, intent(in) :: zi
+    integer, intent(in) :: zi, ai
     pset%zmet = zi
-    call ssp_gen(pset, mass_ssp_zz(:,zi),lbol_ssp_zz(:,zi),&
-         spec_ssp_zz(:,:,zi))
+    pset%afeindex = ai
+    call ssp_gen(pset, mass_ssp_zz(:,zi,ai),lbol_ssp_zz(:,zi,ai),&
+         spec_ssp_zz(:,:,zi,ai))
     if (minval(pset%ssp_gen_age) .eq. 1) then
-       has_ssp(zi) = 1
+       has_ssp(zi,ai) = 1
     endif
-    has_ssp_age(zi,:) = pset%ssp_gen_age
+    has_ssp_age(zi,ai,:) = pset%ssp_gen_age
 
   end subroutine
 
@@ -212,32 +215,38 @@ contains
     integer, intent(in) :: ns,n_age,ztype
     double precision, dimension(ns,n_age) :: spec
     double precision, dimension(n_age) :: mass,lbol
-    integer :: zlo,zmet
-    double precision :: zpos
+    integer :: zlo,zmet,afeidx
+    double precision :: zpos, apos
     character(100) :: outfile
 
     if (ztype .eq. 0) then
        ! Build the SSP for one metallicity, then feed to compsp
        zmet = pset%zmet
-       if (has_ssp(zmet) .eq. 0) then
-          call ssp(zmet)
+       afeidx = pset%afeindex
+       if (has_ssp(zmet,afeidx) .eq. 0) then
+          call ssp(zmet,afeidx)
        endif
        !mass = mass_ssp_zz(:,zmet)
        !lbol = lbol_ssp_zz(:,zmet)
        !spec = spec_ssp_zz(:,:,zmet)
-       call compsp(0,1,outfile,mass_ssp_zz(:,zmet),lbol_ssp_zz(:,zmet),&
-            spec_ssp_zz(:,:,zmet),pset,ocompsp)
+       call compsp(0,1,outfile,mass_ssp_zz(:,zmet,afeidx),&
+                               lbol_ssp_zz(:,zmet,afeidx),&
+                               spec_ssp_zz(:,:,zmet,afeidx),pset,ocompsp)
     endif
 
     if (ztype .eq. 1) then
        zpos = pset%logzsol
+       apos = pset%afe
        ! Find the bracketing metallicity indices and generate ssps if
        ! necessary, then interpolate, and feed the result to compsp
        zlo = max(min(locate(log10(zlegend/zsol),zpos),nz-1),1)
+       alo = max(min(locate(afe_val,apos),nafe-1),1)
        do zmet=zlo,zlo+1
-          if (has_ssp(zmet) .eq. 0) then
-             call ssp(zmet)
-          endif
+          do afeidx=alo,alo+1
+             if (has_ssp(zmet,afeidx) .eq. 0) then
+                call ssp(zmet,afeidx)
+             endif
+          enddo
        enddo
        call ztinterp(zpos,spec,lbol,mass)
        call compsp(0,1,outfile,mass,lbol,spec,pset,ocompsp)
@@ -245,27 +254,31 @@ contains
 
     if (ztype .eq. 2) then
        zpos = pset%logzsol
+       apos = pset%afe
        ! Build the SSPs for *every* metallicity if necessary, then
        ! comvolve with the MDF, and then feed to compsp
        do zmet=1,nz
-          if (has_ssp(zmet) .eq. 0) then
-             call ssp(zmet)
-          endif
+          do afeidx=1,nafe
+             if (has_ssp(zmet,afeidx) .eq. 0) then
+                call ssp(zmet,afeidx)
+             endif
+          enddo
        enddo
-       call ztinterp(zpos,spec,lbol,mass,zpow=pset%pmetals)
+       call ztinterp(zpos,apos,spec,lbol,mass,zpow=pset%pmetals)
        call compsp(0,1,outfile,mass,lbol,spec,pset,ocompsp)
     endif
 
     if (ztype .eq. 3) then
        ! Build the SSPs for *every* metallicity and feed all of them to compsp
        ! for z-dependent tabular
+       afeidx = pset%afeindex
        do zmet=1,nz
-          if (has_ssp(zmet) .eq. 0) then
-             call ssp(zmet)
+          if (has_ssp(zmet,afeidx) .eq. 0) then
+             call ssp(zmet,afeidx)
           endif
        enddo
-       call compsp(0,nz,outfile,mass_ssp_zz,lbol_ssp_zz,&
-            spec_ssp_zz,pset,ocompsp)
+       call compsp(0,nz,outfile,mass_ssp_zz(:,:,afeidx),lbol_ssp_zz(:,:,afeidx),&
+            spec_ssp_zz(:,:,:,afeidx),pset,ocompsp)
     endif
 
 
