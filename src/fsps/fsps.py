@@ -177,13 +177,24 @@ class StellarPopulation(object):
         (Z/Z_\odot)`.  Only used if ``zcontinuous > 0``.
 
     :param pmetals: (default: 2.0)
-       The power for the metallicty distribution function.  The MDF is given by
-       :math:`(Z \, e^{-Z})^{\mathrm{pmetals}}` where :math:`Z =
-       z/(z_\odot \, 10^{\mathrm{logzsol}})` and z is the metallicity in
-       linear units (i.e., :math:`z_\odot = 0.019`).  Using a negative value
-       will result in smoothing of the SSPs by a three-point triangular kernel
-       before linear interpolation (in :math:`\log Z`) to the requested
-       metallicity. Only used if ``zcontinuous = 2``.
+        The power for the metallicty distribution function.  The MDF is given by
+        :math:`(Z \, e^{-Z})^{\mathrm{pmetals}}` where :math:`Z =
+        z/(z_\odot \, 10^{\mathrm{logzsol}})` and z is the metallicity in
+        linear units (i.e., :math:`z_\odot = 0.019`).  Using a negative value
+        will result in smoothing of the SSPs by a three-point triangular kernel
+        before linear interpolation (in :math:`\log Z`) to the requested
+        metallicity. Only used if ``zcontinuous = 2``.
+
+    :param afeindex: (default: 1)
+        The alpha enhancement specified as integer ranging from 1 to nafe. If
+        ``zcontinuous > 0`` then this parameter is ignored. Only takes effect if
+        (python-)FSPS was compiled with AFE_FLAG=1 and uses the MIST isochrones
+        and C3K spectra.
+
+    :param afe: (default: 0.0)
+        The value of [alpha/Fe] for the spectra and isochrones.  Only takes
+        effect if (python-)FSPS was compiled with AFE_FLAG=1 and uses the MIST
+        isochrones.  Generally should be -0.2 < afe < 0.6
 
     :param imf_type: (default: 2)
         Common variable defining the IMF type:
@@ -465,6 +476,8 @@ class StellarPopulation(object):
             zmet=1,
             logzsol=0.0,
             pmetals=2.0,
+            afeindex=1,
+            afe=0.0,
             imf_type=2,
             imf_upper_limit=120,
             imf_lower_limit=0.08,
@@ -1234,6 +1247,7 @@ class ParameterSet(object):
         "cloudy_dust",
         "add_igm_absorption",
         "zmet",
+        "afeindex",
         "sfh",
         "wgp1",
         "wgp2",
@@ -1246,6 +1260,7 @@ class ParameterSet(object):
         "dust1",
         "dust2",
         "logzsol",
+        "afe",
         "zred",
         "pmetals",
         "dust_clumps",

@@ -94,9 +94,9 @@ contains
                             compute_light_ages0,nebemlineinspec0,&
                             dust_type0,add_dust_emission0,add_neb_emission0,&
                             add_neb_continuum0,cloudy_dust0,add_igm_absorption0,&
-                            zmet,sfh,wgp1,wgp2,wgp3,tau,&
+                            zmet,afeindex,sfh,wgp1,wgp2,wgp3,tau,&
                             const,tage,fburst,tburst,dust1,dust2,&
-                            logzsol,zred,pmetals,dust_clumps,frac_nodust,&
+                            logzsol,afe,zred,pmetals,dust_clumps,frac_nodust,&
                             dust_index,dust_tesc,frac_obrun,uvb,mwr,&
                             dust1_index,sf_start,sf_trunc,sf_slope,&
                             duste_gamma,duste_umin,duste_qpah,&
@@ -111,10 +111,10 @@ contains
                            compute_light_ages0,nebemlineinspec0,&
                            dust_type0,add_dust_emission0,add_neb_emission0,&
                            add_neb_continuum0,cloudy_dust0,add_igm_absorption0,&
-                           zmet,sfh,wgp1,wgp2,wgp3
+                           zmet,afeindex,sfh,wgp1,wgp2,wgp3
     double precision, intent(in) :: tau,&
                             const,tage,fburst,tburst,dust1,dust2,&
-                            logzsol,zred,pmetals,dust_clumps,frac_nodust,&
+                            logzsol,afe,zred,pmetals,dust_clumps,frac_nodust,&
                             dust_index,dust_tesc,frac_obrun,uvb,mwr,&
                             dust1_index,sf_start,sf_trunc,sf_slope,&
                             duste_gamma,duste_umin,duste_qpah,&
@@ -133,6 +133,7 @@ contains
     add_igm_absorption=add_igm_absorption0
 
     pset%zmet=zmet
+    pset%afeindex=afeindex
     pset%sfh=sfh
     pset%wgp1=wgp1
     pset%wgp2=wgp2
@@ -146,6 +147,7 @@ contains
     pset%dust1=dust1
     pset%dust2=dust2
     pset%logzsol=logzsol
+    pset%afe=afe
     pset%zred=zred
     pset%pmetals=pmetals
     pset%dust_clumps=dust_clumps
