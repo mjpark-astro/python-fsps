@@ -191,7 +191,7 @@ contains
 
   subroutine ssp(zi,ai)
 
-    ! Compute a SSP at a single metallicity.
+    ! Compute a SSP at a single metallicity gridpoint.
 
     implicit none
     integer, intent(in) :: zi, ai
@@ -243,7 +243,7 @@ contains
        alo = max(min(locate(afe_val,apos),nafe-1),1)
        do zmet=zlo,zlo+1
           do afeidx=alo,alo+1
-             if (has_ssp(zmet,afeidx) .eq. 0) then
+             if ((has_ssp(zmet,afeidx) .eq. 0).and.(afeidx.le.nafe)) then
                 call ssp(zmet,afeidx)
              endif
           enddo
