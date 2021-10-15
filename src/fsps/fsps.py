@@ -1065,6 +1065,12 @@ class StellarPopulation(object):
         return self._zlegend
 
     @property
+    def n_afe(self):
+        r"""The number of [a/Fe] gridpoints."""
+        nafe = driver.get_nafe()
+        return nafe
+
+    @property
     def ssp_ages(self):
         r"""The age grid of the SSPs, in log(years), used by FSPS."""
         if self._ssp_ages is None:

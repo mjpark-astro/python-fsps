@@ -457,6 +457,16 @@ contains
 
   end subroutine
 
+  subroutine get_nafe(n_afe)
+
+    ! get the number of afe grid points
+
+    implicit none
+    integer, intent(out) :: n_afe
+    n_afe = nafe
+
+  end subroutine
+
   subroutine get_timefull(n_age,timefull)
 
     ! Get the actual time steps of the SSPs.
