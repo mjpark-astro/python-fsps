@@ -47,6 +47,8 @@ ext = Extension(
             "lesssimple.f90",
             "sps_vars.f90",
             "sps_utils.f90",
+            "pz_convol.f90",
+            "spec_bin.f90",
         ]
     ]
     + [
