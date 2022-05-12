@@ -93,7 +93,8 @@ contains
   subroutine set_csp_params(smooth_velocity0,redshift_colors0,&
                             compute_light_ages0,nebemlineinspec0,&
                             dust_type0,add_dust_emission0,add_neb_emission0,&
-                            add_neb_continuum0,cloudy_dust0,add_igm_absorption0,&
+                            add_neb_continuum0,cloudy_dust0,cloudy_xray0,&
+                            add_igm_absorption0,&
                             zmet,sfh,wgp1,wgp2,wgp3,tau,&
                             const,tage,fburst,tburst,dust1,dust2,&
                             logzsol,zred,pmetals,dust_clumps,frac_nodust,&
@@ -110,7 +111,8 @@ contains
     integer, intent(in) :: smooth_velocity0,redshift_colors0,&
                            compute_light_ages0,nebemlineinspec0,&
                            dust_type0,add_dust_emission0,add_neb_emission0,&
-                           add_neb_continuum0,cloudy_dust0,add_igm_absorption0,&
+                           add_neb_continuum0,cloudy_dust0,cloudy_xray0,&
+                           add_igm_absorption0,&
                            zmet,sfh,wgp1,wgp2,wgp3
     double precision, intent(in) :: tau,&
                             const,tage,fburst,tburst,dust1,dust2,&
@@ -130,6 +132,7 @@ contains
     add_neb_emission=add_neb_emission0
     add_neb_continuum=add_neb_continuum0
     cloudy_dust=cloudy_dust0
+    cloudy_xray=cloudy_xray0
     add_igm_absorption=add_igm_absorption0
 
     pset%zmet=zmet

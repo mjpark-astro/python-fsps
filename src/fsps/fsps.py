@@ -114,6 +114,9 @@ class StellarPopulation(object):
     :param cloudy_dust: (default: False)
         Switch to include dust in the Cloudy tables.
 
+    :param cloudy_xray: (default: False)
+        Switch to include xray sources in the Cloudy tables (only if using BPASS & XRAY)
+
     :param agb_dust: (default: 1.0)
         Scales the circumstellar AGB dust emission.
 
@@ -451,6 +454,7 @@ class StellarPopulation(object):
             smooth_velocity=True,
             smooth_lsf=False,
             cloudy_dust=False,
+            cloudy_xray=False,
             agb_dust=1.0,
             tpagb_norm_type=2,
             dell=0.0,
@@ -1232,6 +1236,7 @@ class ParameterSet(object):
         "add_neb_emission",
         "add_neb_continuum",
         "cloudy_dust",
+        "cloudy_xray",
         "add_igm_absorption",
         "zmet",
         "sfh",
