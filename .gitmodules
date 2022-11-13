@@ -1,4 +1,4 @@
 [submodule "src/fsps/libfsps"]
 	path = src/fsps/libfsps
-	url = git@github.com:mjpark-astro/fsps.git
+	url = https://github.com/mjpark-astro/fsps.git
 	branch = alpha
