@@ -1,3 +1,4 @@
 [submodule "src/fsps/libfsps"]
 	path = src/fsps/libfsps
-	url = https://github.com/cconroy20/fsps
+	url = https://github.com/mjpark-astro/fsps
+        branch = afe
