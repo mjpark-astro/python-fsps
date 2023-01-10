@@ -488,7 +488,7 @@ class StellarPopulation(object):
             mdave=0.5,
             evtype=-1,
             use_wr_spectra=1,
-            logt_wmb_hot=0.0,
+            logt_wmb_hot=10.0,
             masscut=150.0,
             sigma_smooth=0.0,
             min_wave_smooth=1e3,
